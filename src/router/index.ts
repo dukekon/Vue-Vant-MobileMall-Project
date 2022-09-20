@@ -19,6 +19,27 @@ const router = createRouter({
           component: () => import('@/views/search/SearchView.vue'),
         },
       ],
+      meta: {
+        showTabbar: true,
+      },
+    },
+    {
+      path: '/user',
+      name: 'user',
+      component: () => import('@/views/user/UserView.vue'),
+      children: [
+        {
+          path: '/user/login',
+          name: 'login',
+          component: () => import('@/views/login/LoginView.vue'),
+          meta: {
+            showTabbar: false,
+          },
+        },
+      ],
+      meta: {
+        showTabbar: true,
+      },
     },
   ],
 })
