@@ -14,6 +14,10 @@
           <a href="javascript:" @click.prevent="onLogin">登录 / 注册</a>
         </div>
       </div>
+      <div class="logout" @click="logout">
+        <van-icon name="back-top" />
+        <span>退出</span>
+      </div>
     </header>
     <main>
       <div class="link-list">
@@ -21,7 +25,6 @@
           <van-grid-item v-for="item in links">
             <a href="javascript:" @click.prevent="">{{ item }}</a>
           </van-grid-item>
-          RF
         </van-grid>
       </div>
     </main>
@@ -34,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, toRefs } from 'vue'
+import { inject, reactive, ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -63,6 +66,15 @@ checkLogin()
 
 const finishLogin = () => {
   checkLogin()
+}
+//#endregion
+
+//#region 退出登录
+const reload = inject('reload') as () => void
+
+const logout = () => {
+  localStorage.removeItem('token')
+  reload()
 }
 //#endregion
 
@@ -120,6 +132,18 @@ const links: string[] = [
         a {
           color: #fff;
         }
+      }
+    }
+
+    .logout {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #8d8c8c;
+
+      .van-icon-back-top {
+        transform: rotate(90deg);
+        margin-right: 4px;
       }
     }
   }

@@ -53,6 +53,7 @@ const emit = defineEmits<Emit>()
 const login = async (data: any) => {
   const res = await postLogin(data)
   if (res.errno === 0) {
+    console.log(res.errno)
     const { token, userInfo } = res.data
     localStorage.setItem('token', token)
     localStorage.setItem('userInfo', JSON.stringify(userInfo))

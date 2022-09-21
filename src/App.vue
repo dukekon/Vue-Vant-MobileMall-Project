@@ -1,7 +1,17 @@
 <template>
-  <router-view />
+  <router-view v-if="isRouterActive" />
   <TheTabbar v-if="$route.meta.showTabbar" />
 </template>
+
 <script setup lang="ts">
 import TheTabbar from '@/components/TheTabbar.vue'
+import { nextTick, provide, ref } from 'vue'
+
+const isRouterActive = ref<boolean>(true)
+provide('reload', () => {
+  isRouterActive.value = false
+  nextTick(() => {
+    isRouterActive.value = true
+  })
+})
 </script>
