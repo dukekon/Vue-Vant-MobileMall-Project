@@ -5,20 +5,14 @@
       <van-dropdown-item title="价格" v-model="price" :options="filterPrice" @change="changePrice" />
       <van-dropdown-item v-model="category" :options="filerCategory" @change="changeCategory" />
     </van-dropdown-menu>
-    <van-grid class="goods-list" v-if="goodsList.length" column-num="2" gutter="4" :border="false">
-      <van-grid-item class="goods-item" v-for="item in goodsList" :key="item.id">
-        <img class="goods-item-pic" :src="item.list_pic_url" :alt="item.name" />
-        <p class="goods-item-name van-ellipsis">{{ item.name }}</p>
-        <p class="goods-item-price">￥{{ item.retail_price }}元</p>
-      </van-grid-item>
-    </van-grid>
-    <van-empty v-else description="无相关商品" />
+    <TheGoodsList :goodsList="goodsList" />
   </div>
 </template>
 
 <script setup lang="ts">
 import type { Filter, Goods } from '@/types/search'
 import { ref } from 'vue'
+import TheGoodsList from '@/components/TheGoodsList.vue'
 
 interface Props {
   goodsList: Goods[]
@@ -55,26 +49,5 @@ const changePrice = (value: string) => {
 </script>
 
 <style lang="scss" scoped>
-.goods-list {
-  padding-top: 4px;
 
-  .goods-item {
-
-    &-pic {
-      display: block;
-      width: 165.5px;
-    }
-
-    &-name {
-      margin-bottom: 10px;
-      text-align: center;
-      width: 150px;
-    }
-
-    &-price {
-      text-align: center;
-      color: #f00;
-    }
-  }
-}
 </style>

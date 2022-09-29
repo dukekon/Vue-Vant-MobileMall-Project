@@ -8,11 +8,11 @@
     </main>
   </div>
 
-  <router-view />
+  <router-view v-if="$route.name === 'search'" />
 </template>
 
 <script setup lang="ts">
-import TheBanner from '@/views/home/components/TheBanner.vue'
+import TheBanner from '@/components/TheBanner.vue'
 
 import { reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
