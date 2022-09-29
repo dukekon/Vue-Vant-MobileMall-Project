@@ -17,11 +17,19 @@ const router = createRouter({
           path: '/home/search',
           name: 'search',
           component: () => import('@/views/search/SearchView.vue'),
+          meta: {
+            showTabbar: false,
+          },
         },
       ],
       meta: {
         showTabbar: true,
       },
+    },
+    {
+      path: '/goods',
+      name: 'goods',
+      component: () => import('@/views/Goods/GoodsDetailView.vue'),
     },
     {
       path: '/user',
@@ -42,6 +50,12 @@ const router = createRouter({
       },
     },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  // document.body.scrollTop = 0
+  document.documentElement.scrollTop = 0
+  next()
 })
 
 export default router

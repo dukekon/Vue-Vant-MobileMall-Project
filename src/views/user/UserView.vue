@@ -74,6 +74,7 @@ const reload = inject('reload') as () => void
 
 const logout = () => {
   localStorage.removeItem('token')
+  localStorage.removeItem('userInfo')
   reload()
 }
 //#endregion

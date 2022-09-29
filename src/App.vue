@@ -1,5 +1,5 @@
 <template>
-  <router-view v-if="isRouterActive" />
+  <router-view v-if="isRouterActive" :key="$route.fullPath" />
   <TheTabbar v-if="$route.meta.showTabbar" />
 </template>
 
