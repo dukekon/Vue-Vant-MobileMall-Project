@@ -5,8 +5,15 @@ const instance = axios.create({
   timeout: 5000,
 })
 
+
 instance.interceptors.request.use(
-  config => config,
+  config => {
+    const token = localStorage.getItem('token')
+    if (token && config.headers) {
+      config.headers['X-Nideshop-Token'] = token
+    }
+    return config
+  },
   error => Promise.reject(error),
 )
 instance.interceptors.response.use(

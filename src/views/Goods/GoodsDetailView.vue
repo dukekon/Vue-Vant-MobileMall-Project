@@ -5,7 +5,7 @@
       <img v-else class="goods-pic" :src="goodsPic" />
       <TheTips />
       <TheGoodsInfo :info="goodsInfo" />
-      <TheGoodsAttribute :attribute="goodsAttribute" />
+      <TheGoodsAttribute v-if="goodsAttribute.length" :attribute="goodsAttribute" />
       <TheGoodsDesc :info="goodsInfo" />
       <TheSection title="常见问题" margin>
         <template #content>
@@ -21,8 +21,10 @@
   </div>
   <!-- 商品导航 -->
   <van-action-bar>
-    <van-action-bar-icon icon="star" text="已收藏" color="#ff5000" />
-    <van-action-bar-icon icon="cart-o" text="购物车" />
+    <!--    ff5000-->
+    <van-action-bar-icon icon="star-o" text="已收藏" color="#333" />
+    <van-action-bar-icon icon="cart-o" text="购物车" :badge="cartNumber === 0? '' : cartNumber"
+                         @click="$router.push('/cart')" />
     <van-action-bar-button type="warning" text="加入购物车" @click="showPopup" />
     <van-action-bar-button type="danger" text="立即购买" @click="showPopup" />
   </van-action-bar>
@@ -30,8 +32,8 @@
   <van-popup v-model:show="showSku" position="bottom" :style="{ height: '40%' }" duration="0.15" z-index="2" closeable
              round>
     <template #default>
-      <TheSkuContent :img="goodsPic" :data="goodsInfo" />
-      <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" round>确认</van-button>
+      <TheSkuContent :img="goodsPic" :data="goodsInfo" @changeNumber="changeNumber" />
+      <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" round @click="addCart">确认</van-button>
     </template>
   </van-popup>
 </template>
@@ -48,7 +50,7 @@ import TheGoodsList from '@/components/TheGoodsList.vue'
 import TheSkuContent from '@/views/Goods/components/TheSkuContent.vue'
 
 import { useRoute } from 'vue-router'
-import { getGoodsDetail, getGoodsRelated } from '@/api/goods'
+import { getCartNumber, getGoodsDetail, getGoodsRelated, postAddCart } from '@/api/goods'
 import { ref } from 'vue'
 import type { Gallery, GoodsAttribute, GoodsInfo, GoodsIssue } from '@/types/goods'
 import type { Goods } from '@/types/search'
@@ -83,15 +85,44 @@ const getRelatedGoods = async () => {
 }
 //#endregion
 
+//#region 购物车栏
+const cartNumber = ref<number>(0)
+
+const getCartNum = async () => {
+  const res = await getCartNumber()
+  if (res.errno === 0) {
+    cartNumber.value = res.data.cartTotal.goodsCount
+  }
+  console.log(cartNumber.value)
+}
+
+getCartNum()
+//#endregion
+
 //#region Sku
 const showSku = ref<boolean>(false)
+const product = ref<any[]>([])
 const img = ref<string>('')
-
+const number = ref<number>(1)
 
 const showPopup = () => {
   showSku.value = true
   img.value = goodsPic.value
-  console.log(goodsPic.value)
+}
+
+const changeNumber = (value: number) => number.value = value
+
+const addCart = async () => {
+  console.log(number.value)
+  const res = await postAddCart({
+    goodsId: product.value[0].goods_id,
+    productId: product.value[0].id,
+    number: number.value,
+  })
+  showSku.value = false
+  if (res.errno === 0) {
+    await getCartNum()
+  }
 }
 //#endregion
 
@@ -100,20 +131,20 @@ const initGoodsDetail = async () => {
   // const res = await getGoodsDetail('1135051')
   const res = await getGoodsDetail(goodsId)
   if (res.errno === 0) {
-    const { gallery, info, attribute, issue } = res.data
+    const { gallery, info, attribute, issue, productList } = res.data
     banner.value = gallery
     goodsPic.value = info.primary_pic_url
     goodsInfo.value = info
     goodsAttribute.value = attribute
     issueList.value = issue
+    product.value = productList
   }
-  console.log(res)
+  // console.log(res)
   await getRelatedGoods()
 }
 
 initGoodsDetail()
 //#endregion
-
 
 </script>
 

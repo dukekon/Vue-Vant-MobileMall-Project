@@ -11,3 +11,8 @@ export const getGoodsRelated = (id: string) => request.get('/goods/related', {
     id: id,
   },
 })
+
+// Sku
+export const postAddCart = (params: any) => request.post('/cart/add', params)
+
+export const getCartNumber = () => request.post('/cart/goodscount')

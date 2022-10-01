@@ -10,7 +10,7 @@
       <p class="goods-info__number">库存：{{ data.goods_number }}{{ data.goods_unit }}</p>
       <van-field name="stepper" label="购买数量">
         <template #input>
-          <van-stepper v-model="count" />
+          <van-stepper v-model="count" @change="changeNumber" />
         </template>
       </van-field>
     </div>
@@ -31,6 +31,16 @@ interface Props {
 defineProps<Props>()
 
 const count = ref<number>(1)
+
+interface Emit {
+  (e: 'changeNumber', value: number): void
+}
+
+const emit = defineEmits<Emit>()
+
+const changeNumber = (value: number) => {
+  emit('changeNumber', value)
+}
 </script>
 
 <style lang="scss" scoped>

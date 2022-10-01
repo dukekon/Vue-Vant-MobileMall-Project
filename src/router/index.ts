@@ -32,6 +32,14 @@ const router = createRouter({
       component: () => import('@/views/Goods/GoodsDetailView.vue'),
     },
     {
+      path: '/cart',
+      name: 'cart',
+      component: () => import('@/views/cart/CartView.vue'),
+      meta: {
+        showTabbar: false,
+      },
+    },
+    {
       path: '/user',
       name: 'user',
       component: () => import('@/views/user/UserView.vue'),
