@@ -14,7 +14,7 @@
           <a href="javascript:" @click.prevent="onLogin">登录 / 注册</a>
         </div>
       </div>
-      <div class="logout" @click="logout">
+      <div class="logout" v-if="isLogin" @click="logout">
         <van-icon name="back-top" />
         <span>退出</span>
       </div>

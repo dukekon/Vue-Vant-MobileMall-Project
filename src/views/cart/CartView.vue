@@ -58,7 +58,7 @@ const toggleChecked = (item: CartItem) => {
 //全部反选
 const checkedAll = computed({
   get: () => {
-    return checked.value.length === cartItems.value.length
+    return cartItems.value.length === 0 ? false : checked.value.length === cartItems.value.length
   },
   set: (value) => {
     const arr: number[] = []
@@ -78,18 +78,6 @@ const checkedAll = computed({
   },
 })
 
-//#endregion
-
-//#region 删除商品
-const delEvent = (id: number) => {
-  delCartItem(id.toString())
-}
-
-const delCartItem = async (ids: string) => {
-  postDelCartItems(ids).then(
-      res => initCartData(),
-  )
-}
 //#endregion
 
 //#region 订单提交栏

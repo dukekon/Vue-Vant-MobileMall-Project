@@ -1,6 +1,11 @@
 <template>
   <div class="goods-detail">
+
     <main>
+      <van-nav-bar left-text="返回"
+                   left-arrow
+                   :border="false"
+                   @click-left="onClickLeft" />
       <TheBanner v-if="banner.length" :images="banner" />
       <img v-else class="goods-pic" :src="goodsPic" />
       <TheTips />
@@ -54,6 +59,8 @@ import { getCartNumber, getGoodsDetail, getGoodsRelated, postAddCart } from '@/a
 import { ref } from 'vue'
 import type { Gallery, GoodsAttribute, GoodsInfo, GoodsIssue } from '@/types/goods'
 import type { Goods } from '@/types/search'
+import router from '@/router'
+import { showToast } from 'vant'
 
 
 const route = useRoute()
@@ -106,8 +113,13 @@ const img = ref<string>('')
 const number = ref<number>(1)
 
 const showPopup = () => {
-  showSku.value = true
-  img.value = goodsPic.value
+  if (localStorage.getItem('token')) {
+    showSku.value = true
+    img.value = goodsPic.value
+  } else {
+    showToast('请先登录')
+    router.push({ name: 'login' })
+  }
 }
 
 const changeNumber = (value: number) => number.value = value
@@ -146,9 +158,22 @@ const initGoodsDetail = async () => {
 initGoodsDetail()
 //#endregion
 
+
+//#region 返回
+const onClickLeft = () => {
+  history.back()
+}
+//#endregion
 </script>
 
 <style lang="scss" scoped>
+.van-nav-bar {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0);
+}
+
 .goods-pic {
   display: block;
   width: 100%;

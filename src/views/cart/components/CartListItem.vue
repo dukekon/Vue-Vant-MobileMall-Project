@@ -6,13 +6,12 @@
   >
     <template #num>
       <van-stepper v-model="number" @click.stop v-if="isEdit" min="1" />
-      <span v-else>x {{ item.number }}</span>
+      <span v-else>x {{ number }}</span>
     </template>
     <template #footer>
       <van-button v-if="isEdit" size="mini" @click.stop="onEditFinish(item)">完成</van-button>
       <van-button v-else size="mini" @click.stop="onEdit(item.number)">编辑</van-button>
-      <!--    delEvent(item.product_id)  -->
-      <van-button size="mini" @click.stop="">删除</van-button>
+      <van-button size="mini" @click.stop="delEvent(item.product_id)">删除</van-button>
     </template>
   </van-card>
 </template>
@@ -20,19 +19,16 @@
 <script setup lang="ts">
 import { inject, ref } from 'vue'
 import type { CartItem } from '@/types/cart'
-import { postGoodsNum } from '@/api/cart'
+import { postDelCartItems, postGoodsNum } from '@/api/cart'
 
 interface Props {
   item: CartItem
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
-// interface Emit {
-//   (e: 'finishEdit'): void
-// }
 
-const number = ref<number>(1)
+const number = ref<number>(props.item.number)
 const reload = inject('reloadCart') as () => void
 
 //# region 编辑购物车
@@ -60,7 +56,18 @@ const onEditFinish = (item: CartItem) => {
       },
   )
 }
+//#endregion
 
+//#region 删除商品
+const delEvent = (id: number) => {
+  delCartItem(id.toString())
+}
+
+const delCartItem = async (ids: string) => {
+  postDelCartItems(ids).then(
+      res => reload(),
+  )
+}
 //#endregion
 </script>
 
