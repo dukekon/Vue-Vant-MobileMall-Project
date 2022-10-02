@@ -4,7 +4,8 @@
       <van-search placeholder="输入关键词搜索" shape="round" readonly @click-input="onClickInput" />
     </header>
     <main>
-      <TheBanner :images="banner" />
+      <TheBanner :images="banners" />
+      <TheChannel :channel="channels" />
     </main>
   </div>
 
@@ -14,30 +15,39 @@
 <script setup lang="ts">
 import TheBanner from '@/components/TheBanner.vue'
 
-import { reactive, toRefs } from 'vue'
+import { reactive, ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { getHomeData } from '@/api/home'
-import type { IndexData } from '@/types/home'
+import type { Banner, Channel, IndexData } from '@/types/home'
+import TheChannel from '@/views/home/components/TheChannel.vue'
 
 //#region 公共变量
 const router = useRouter()
-const indexData = reactive<IndexData>({
-  banner: [],
-})
+//#endregion
+
+//#region 轮播图
+const banners = ref<Banner[]>([])
+//#endregion
+
+//#region 分类图标
+const channels = ref<Channel[]>([])
+//#endregion
+
+//#region 品牌提供商
+
 //#endregion
 
 //#region 初始化页面数据
 const getIndexData = async () => {
   const res = await getHomeData()
   if (res.errno === 0) {
-    const { banner } = res.data
-    indexData.banner = banner
+    const { banner, channel } = res.data
+    banners.value = banner
+    channels.value = channel
   }
+  console.log(res.data)
 }
-
 getIndexData()
-
-const { banner } = toRefs(indexData)
 //#endregion
 
 //#region 事件

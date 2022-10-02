@@ -1,6 +1,6 @@
 export interface IndexData {
   banner: Banner[]
-  // channel: Channel[]
+  channel: Channel[]
   // newGoodsList: NewGoodsList[]
   // hotGoodsList: HotGoodsList[]
   // brandList: BrandList[]
