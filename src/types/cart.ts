@@ -14,3 +14,10 @@ export interface CartItem {
   goods_sn: string
   goods_specifition_ids: string
 }
+
+export interface PostGoodsNum {
+  goodsId: number
+  number: number
+  id: number
+  productId: number
+}

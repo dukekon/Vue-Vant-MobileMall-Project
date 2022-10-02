@@ -5,9 +5,7 @@
           title="购物车"
           left-text="返回"
           left-arrow
-          right-text="编辑"
-          @click-left="back"
-          @click-right="onEdit" />
+          @click-left="back" />
     </header>
     <main>
       <div class="cart-list">
@@ -17,20 +15,7 @@
                         label-disabled
                         @click.stop="toggleChecked(item)"
                         :key="item.id">
-            <van-card
-                :price="item.market_price.toFixed(2)"
-                :title="item.goods_name"
-                :thumb="item.list_pic_url"
-            >
-              <template #num>
-                <van-stepper @click.stop v-if="isEdit" min="1" />
-                <span v-else>x {{ item.number }}</span>
-              </template>
-              <!--              <template #footer>-->
-              <!--                <van-button size="mini" @click.stop="onEdit">编辑</van-button>-->
-              <!--                <van-button size="mini" @click.stop="delEvent(item.product_id)">删除</van-button>-->
-              <!--              </template>-->
-            </van-card>
+            <CartListItem :item="item" />
           </van-checkbox>
         </van-checkbox-group>
       </div>
@@ -45,9 +30,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, provide, ref } from 'vue'
 import { getCartData, postDelCartItems, postToggleChecked } from '@/api/cart'
 import type { CartItem } from '@/types/cart'
+import CartListItem from '@/views/cart/components/CartListItem.vue'
 
 //#region 购物车物品列表
 const cartItems = ref<CartItem[]>([])
@@ -94,13 +80,6 @@ const checkedAll = computed({
 
 //#endregion
 
-//# region 编辑购物车
-const isEdit = ref<boolean>(false)
-const onEdit = () => {
-  isEdit.value = !isEdit.value
-}
-//#endregion
-
 //#region 删除商品
 const delEvent = (id: number) => {
   delCartItem(id.toString())
@@ -118,6 +97,8 @@ const checkedGoodsAmount = ref<number>(0)
 //endregion
 
 //#region 初始化购物车页面数据
+provide('reloadCart', () => initCartData())
+
 const initCartData = async () => {
   const res = await getCartData()
   if (res.errno === 0) {
@@ -176,33 +157,6 @@ header {
 
       ::v-deep(.van-checkbox__label ) {
         flex: 1;
-
-        .van-card {
-          padding-top: 0;
-          padding-left: 0;
-          background-color: #ffffffff;
-
-          .van-card__content {
-            display: flex;
-            justify-content: space-around;
-          }
-
-          .van-card__num {
-            position: relative;
-
-            .van-stepper {
-              position: absolute;
-              width: 100px;
-              //bottom: 10;
-              right: -15px;
-              transform: scale(.8);
-            }
-
-            span {
-              margin-right: 10px;
-            }
-          }
-        }
       }
     }
   }
